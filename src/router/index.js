@@ -41,41 +41,30 @@ import manageAppRouter from './modules/manage-app'
  */
 export const constantRoutes = [
   {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
-    path: '/403',
-    component: () => import('@/views/error-page/403'),
-    hidden: true
-  },
-  {
     path: '/',
     component: Layout,
     redirect: '/manage-application/list'
-  }
+  },
+  {
+    path: '/manage-application/list',
+    component: () => import('@/components/HelloWorld'),
+    name: 'Home'
+  },
+  {
+    path: '/layer-motion-slideshow',
+    component: () => import('@/views/layer-motion-slideshow'),
+    name: 'Layer Motion Slideshow'
+  },
+  {
+    path: '/motion-reveal-slideshow',
+    component: () => import('@/components/motion-reveal-slideshow'),
+    name: 'Motion Reveal Slideshow'
+  },
+  {
+    path: '/typography-motion',
+    component: () => import('@/components/typography-motion'),
+    name: 'Typography Motion'
+  },
 ]
 
 /**
