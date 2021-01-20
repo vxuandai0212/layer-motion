@@ -164,7 +164,7 @@ export const mixin = {
         link.addEventListener('click', () => this.cursorClick())
       })
     },
-    getFigureInfo(el) {
+    setupFigure(el) {
       let figure = {}
       figure.DOM = {}
       figure.DOM.el = el
@@ -185,7 +185,7 @@ export const mixin = {
           figure.DOM.inner.appendChild(figure.DOM.img.cloneNode(true))
         }
         // Initialize the tilt effect.
-        figure.tilt = this.getTiltInfo(figure.DOM.inner, {
+        figure.tilt = this.setupTilt(figure.DOM.inner, {
           valuesFromTo: [20, -20],
           lerpFactorOuter: 0.1,
           lerpFactor: (pos) => 0.02 * pos + 0.02
@@ -193,7 +193,7 @@ export const mixin = {
       }
       return figure
     },
-    getTiltInfo(el, options) {
+    setupTilt(el, options) {
       let tilt = {}
       tilt.DOM = {}
       tilt.DOM.el = el
@@ -267,15 +267,23 @@ export const mixin = {
         }
       }
     },
-    getSlideInfo(el) {
+    async setupFigures(el) {
+        let figureEls = el.querySelectorAll('.slide__figure')
+        let figures = []
+        for (let i=0; i<figureEls.length; i++) {
+            let figureEl = figureEls[i]
+            let figure = await this.setupFigure(figureEl)
+            figures.push(figure)
+        }
+        return figures
+    },
+    setupSlide(el) {
       let slide = {}
       slide.DOM = {}
       slide.DOM.el = el
-      slide.figures = []
-      ;[...el.querySelectorAll('.slide__figure')].forEach((figure) =>
-        slide.figures.push(this.getFigureInfo(figure))
-      )
-      slide.figuresTotal = slide.figures.length
+      let figures = await setupFigures(el)
+      slide.figures = figures
+      slide.figuresTotal = figures.length
       slide.DOM.title = slide.DOM.el.querySelector('.slide__title')
       slide.DOM.content = slide.DOM.el.querySelector('.slide__content')
       slide.contentcolor = slide.DOM.el.dataset.contentcolor
@@ -310,7 +318,7 @@ export const mixin = {
       // total letters.
       slide.titleLettersTotal = slide.innerTitleMainLetters.length
       // Initialize the tilt effect for the title.
-      slide.textTilt = this.getTiltInfo(slide.DOM.title, {})
+      slide.textTilt = this.setupTilt(slide.DOM.title, {})
       slide.DOM.text = slide.DOM.el.querySelector('.slide__text')
       slide.DOM.showContentCtrl = slide.DOM.text.querySelector(
         '.slide__text-link'
@@ -356,6 +364,7 @@ export const mixin = {
       this.isAnimating = true
 
       const currentSlide = this.slideshow.slides[this.slideshow.current]
+      console.log(currentSlide)
 
       if (action === 'show') {
         this.isContentOpen = true
@@ -372,8 +381,6 @@ export const mixin = {
           this.isAnimating = false
         }
       }).add('begin')
-
-      console.log(this.slideshow)
 
       const times = {}
       times.switchtime =
@@ -788,15 +795,36 @@ export const mixin = {
           )
         })
     },
-    setupSlideshow() {
+    async setupSlides(els) {
+        let slides = []
+        for (let i=0; i<els.length; i++) {
+            let slideEl = els[i]
+            let slide = await this.setupSlide(slideEl)
+            slides.push(slide)
+        }
+    },
+    async setupSlideshow() {
       const slideshowEl = document.querySelector('.slideshow')
+      const slideEls = slideshowEl.querySelectorAll('.slide')
+      const slides = await this.setupSlides(slideEls)
       this.slideshow.DOM.el = slideshowEl
-      this.slideshow.slides = []
-      ;[...this.slideshow.DOM.el.querySelectorAll('.slide')].forEach((slide) =>
-        this.slideshow.slides.push(this.getSlideInfo(slide))
-      )
-      this.slideshow.slidesTotal = this.slideshow.slides.length
-      this.slideshow.slides[this.current].setCurrent()
+      this.slideshow.slides = slides
+      this.slideshow.slidesTotal = slides.length
+      this.slideSetCurrent()
+    },
+    slideSetCurrent() {
+        this.slideToggleCurrent(true)
+    },
+    slideUnsetCurrent() {
+        this.slideToggleCurrent(false)
+    },
+    slideToggleCurrent(isCurrent) {
+        let current = this.slideshow.slides[this.slideshow.current]
+        current.DOM.el.classList[isCurrent ? 'add' : 'remove']('slide--current')
+        // Start/Stop the images tilt effect (initialized on the main figure).
+        current.figures.find(figure => figure.isMain).tilt[isCurrent ? 'start' : 'stop']()
+        // Start/Stop the title tilt effect.
+        current.textTilt[isCurrent ? 'start' : 'stop']()
     },
     setupNavigation() {
       const navEl = document.querySelector('.nav')
