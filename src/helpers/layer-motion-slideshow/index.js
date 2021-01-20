@@ -9,7 +9,7 @@ export const lineEq = (y2, y1, x2, x1, currentVal) => {
 export const lerp = (a, b, n) => (1 - n) * a + n * b
 
 export const bodyColor =
-	getComputedStyle(body)
+	getComputedStyle(document.body)
 		.getPropertyValue('--color-bg')
 		.trim() || 'white'
 

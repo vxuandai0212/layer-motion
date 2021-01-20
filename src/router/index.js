@@ -64,7 +64,7 @@ export const constantRoutes = [
     path: '/typography-motion',
     component: () => import('@/components/typography-motion'),
     name: 'Typography Motion'
-  },
+  }
 ]
 
 /**
@@ -72,19 +72,19 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-
   manageAppRouter,
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  base: process.env.VUE_APP_PUBLIC_PATH,
-  mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    base: process.env.VUE_APP_PUBLIC_PATH,
+    mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
