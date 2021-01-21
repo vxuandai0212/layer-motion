@@ -39,20 +39,17 @@
             href="https://tympanus.net/Tutorials/InteractiveParticles/"
             title="Previous Demo"
             data-hover
-            >Previous demo</a
-          >
+          >Previous demo</a>
           <a
             href="https://tympanus.net/codrops/?p=37953"
             title="Back to the article"
             data-hover
-            >Article</a
-          >
+          >Article</a>
           <a
             href="https://github.com/codrops/LayerMotionSlideshow/"
             title="Find this project on GitHub"
             data-hover
-            >GitHub</a
-          >
+          >GitHub</a>
         </div>
         <div class="index" data-hover>index</div>
       </div>
@@ -60,28 +57,16 @@
       <div class="slideshow">
         <div class="slide slide--layout-1" data-contentcolor="#e88655">
           <div class="slide__figure slide__figure--main" data-sort="3">
-            <div
-              class="slide__figure-img"
-              style="background-image: url(img/1.jpg)"
-            ></div>
+            <div class="slide__figure-img" style="background-image: url(img/1.jpg)" />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="2">
-            <div
-              class="slide__figure-img"
-              style="background-image: url(img/3.jpg)"
-            ></div>
+            <div class="slide__figure-img" style="background-image: url(img/3.jpg)" />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="4">
-            <div
-              class="slide__figure-img"
-              style="background-image: url(img/2.jpg)"
-            ></div>
+            <div class="slide__figure-img" style="background-image: url(img/2.jpg)" />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="1">
-            <div
-              class="slide__figure-img"
-              style="background-image: url(img/4.jpg)"
-            ></div>
+            <div class="slide__figure-img" style="background-image: url(img/4.jpg)" />
           </div>
           <h2 class="slide__title">Monachopsis</h2>
           <div class="slide__text slide__text--right">
@@ -95,7 +80,7 @@
           </div>
           <button class="slide__back" data-hover>
             <svg class="icon icon--back">
-              <use xlink:href="#icon-arrow"></use>
+              <use xlink:href="#icon-arrow" />
             </svg>
           </button>
           <div class="slide__content">
@@ -143,25 +128,25 @@
             <div
               class="slide__figure-img"
               style="background-image: url(img/5.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="2">
             <div
               class="slide__figure-img"
               style="background-image: url(img/6.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="3">
             <div
               class="slide__figure-img"
               style="background-image: url(img/7.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="4">
             <div
               class="slide__figure-img"
               style="background-image: url(img/8.jpg)"
-            ></div>
+            />
           </div>
           <h2 class="slide__title">Scabulous</h2>
           <div class="slide__text">
@@ -175,7 +160,7 @@
           </div>
           <button class="slide__back" data-hover>
             <svg class="icon icon--back">
-              <use xlink:href="#icon-arrow"></use>
+              <use xlink:href="#icon-arrow" />
             </svg>
           </button>
           <div class="slide__content">
@@ -226,25 +211,25 @@
             <div
               class="slide__figure-img"
               style="background-image: url(img/13.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="2">
             <div
               class="slide__figure-img"
               style="background-image: url(img/14.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="3">
             <div
               class="slide__figure-img"
               style="background-image: url(img/15.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="4">
             <div
               class="slide__figure-img"
               style="background-image: url(img/16.jpg)"
-            ></div>
+            />
           </div>
           <h2 class="slide__title">Zenosyne</h2>
           <div class="slide__text">
@@ -258,7 +243,7 @@
           </div>
           <button class="slide__back" data-hover>
             <svg class="icon icon--back">
-              <use xlink:href="#icon-arrow"></use>
+              <use xlink:href="#icon-arrow" />
             </svg>
           </button>
           <div class="slide__content">
@@ -311,25 +296,25 @@
             <div
               class="slide__figure-img"
               style="background-image: url(img/9.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="3">
             <div
               class="slide__figure-img"
               style="background-image: url(img/10.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="2">
             <div
               class="slide__figure-img"
               style="background-image: url(img/11.jpg)"
-            ></div>
+            />
           </div>
           <div class="slide__figure slide__figure--box" data-sort="1">
             <div
               class="slide__figure-img"
               style="background-image: url(img/12.jpg)"
-            ></div>
+            />
           </div>
           <h2 class="slide__title">Chrysalism</h2>
           <div class="slide__text slide__text--right">
@@ -342,7 +327,7 @@
           </div>
           <button class="slide__back" data-hover>
             <svg class="icon icon--back">
-              <use xlink:href="#icon-arrow"></use>
+              <use xlink:href="#icon-arrow" />
             </svg>
           </button>
           <div class="slide__content">
@@ -402,8 +387,8 @@
       <!--/slideshow-->
     </main>
     <div class="cursor">
-      <div class="cursor__inner cursor__inner--circle"></div>
-      <div class="cursor__inner cursor__inner--dot"></div>
+      <div class="cursor__inner cursor__inner--circle" />
+      <div class="cursor__inner cursor__inner--dot" />
     </div>
   </div>
 </template>

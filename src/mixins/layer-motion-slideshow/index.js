@@ -58,7 +58,8 @@ export const mixin = {
       },
       isAnimating: false,
       isContentOpen: false,
-      dir: null
+      dir: null,
+      tl: null
     }
   },
   methods: {
@@ -68,7 +69,7 @@ export const mixin = {
       window.addEventListener('resize', this.calcWinsize)
 
       this.setupCursor()
-
+      
       this.setupSlideshow()
 
       this.setupNavigation()
@@ -165,52 +166,58 @@ export const mixin = {
       })
     },
     setupFigure(el) {
-      let figure = {}
-      figure.DOM = {}
-      figure.DOM.el = el
-      figure.DOM.img = figure.DOM.el.querySelector('.slide__figure-img')
-      figure.DOM.slideEl = figure.DOM.img
-      // We will add a tilt effect for the main figure. For this we will create clones of the main image that will move together
-      // with the main image when the user moves the mouse.
-      if (figure.DOM.el.classList.contains('slide__figure--main')) {
-        figure.isMain = true
-        // Number of total images (main image + clones).
-        figure.totalTiltImgs = 2
-        figure.DOM.inner = document.createElement('div')
-        figure.DOM.slideEl = figure.DOM.inner
-        figure.DOM.inner.className = 'slide__figure-inner'
-        figure.DOM.el.appendChild(figure.DOM.inner)
-        figure.DOM.inner.appendChild(figure.DOM.img)
-        for (let i = 0; i <= figure.totalTiltImgs; ++i) {
-          figure.DOM.inner.appendChild(figure.DOM.img.cloneNode(true))
+      let vm = this
+      return new Promise((resolve, reject) => {
+        let figure = {}
+        figure.DOM = {}
+        figure.DOM.el = el
+        figure.DOM.img = figure.DOM.el.querySelector('.slide__figure-img')
+        figure.DOM.slideEl = figure.DOM.img
+        // We will add a tilt effect for the main figure. For this we will create clones of the main image that will move together
+        // with the main image when the user moves the mouse.
+        if (figure.DOM.el.classList.contains('slide__figure--main')) {
+          figure.isMain = true
+          // Number of total images (main image + clones).
+          figure.totalTiltImgs = 2
+          figure.DOM.inner = document.createElement('div')
+          figure.DOM.slideEl = figure.DOM.inner
+          figure.DOM.inner.className = 'slide__figure-inner'
+          figure.DOM.el.appendChild(figure.DOM.inner)
+          figure.DOM.inner.appendChild(figure.DOM.img)
+          for (let i = 0; i <= figure.totalTiltImgs; ++i) {
+            figure.DOM.inner.appendChild(figure.DOM.img.cloneNode(true))
+          }
+          // Initialize the tilt effect.
+          vm.setupTilt(figure.DOM.inner, {
+            valuesFromTo: [20, -20],
+            lerpFactorOuter: 0.1,
+            lerpFactor: (pos) => 0.02 * pos + 0.02
+          }).then(tilt => figure.tilt = tilt)
         }
-        // Initialize the tilt effect.
-        figure.tilt = this.setupTilt(figure.DOM.inner, {
-          valuesFromTo: [20, -20],
-          lerpFactorOuter: 0.1,
-          lerpFactor: (pos) => 0.02 * pos + 0.02
-        })
-      }
-      return figure
+        resolve(figure)
+      })
     },
     setupTilt(el, options) {
-      let tilt = {}
-      tilt.DOM = {}
-      tilt.DOM.el = el
-      tilt.options = {
-        valuesFromTo: [-50, 50],
-        lerpFactorOuter: 0.25,
-        lerpFactor: (pos) => 0.05 * Math.pow(2, pos)
-      }
-      Object.assign(tilt.options, options)
-      tilt.DOM.moving = [...tilt.DOM.el.children]
-      tilt.movingTotal = tilt.DOM.moving.length
-      this.mousePos = { x: this.winsize.width / 2, y: this.winsize.height / 2 }
-      tilt.translations = [...new Array(tilt.movingTotal)].map(() => ({
-        x: 0,
-        y: 0
-      }))
-      return tilt
+      let vm = this
+      return new Promise(function(resolve, reject) {
+        let tilt = {}
+        tilt.DOM = {}
+        tilt.DOM.el = el
+        tilt.options = {
+          valuesFromTo: [-50, 50],
+          lerpFactorOuter: 0.25,
+          lerpFactor: (pos) => 0.05 * Math.pow(2, pos)
+        }
+        Object.assign(tilt.options, options)
+        tilt.DOM.moving = [...tilt.DOM.el.children]
+        tilt.movingTotal = tilt.DOM.moving.length
+        vm.mousePos = { x: vm.winsize.width / 2, y: vm.winsize.height / 2 }
+        tilt.translations = [...new Array(tilt.movingTotal)].map(() => ({
+          x: 0,
+          y: 0
+        }))
+        resolve(tilt)
+      })
     },
     tiltRender(tilt) {
       for (let i = 0; i <= tilt.movingTotal - 1; ++i) {
@@ -268,66 +275,71 @@ export const mixin = {
       }
     },
     async setupFigures(el) {
+      let vm = this
+      return new Promise((resolve, reject) => {
         let figureEls = el.querySelectorAll('.slide__figure')
         let figures = []
+        const promises = [];
         for (let i=0; i<figureEls.length; i++) {
-            let figureEl = figureEls[i]
-            let figure = await this.setupFigure(figureEl)
-            figures.push(figure)
+          let figureEl = figureEls[i]
+          promises.push(vm.setupFigure(figureEl).then(figure => figures.push(figure)))
         }
-        return figures
+        Promise.all(promises).then(() => {
+          resolve(figures)
+        })
+      })
     },
     setupSlide(el) {
-      let slide = {}
-      slide.DOM = {}
-      slide.DOM.el = el
-      let figures = await setupFigures(el)
-      slide.figures = figures
-      slide.figuresTotal = figures.length
-      slide.DOM.title = slide.DOM.el.querySelector('.slide__title')
-      slide.DOM.content = slide.DOM.el.querySelector('.slide__content')
-      slide.contentcolor = slide.DOM.el.dataset.contentcolor
-      slide.DOM.backFromContentCtrl = slide.DOM.el.querySelector('.slide__back')
-      slide.DOM.backFromContentCtrl.addEventListener(
-        'click',
-        this.slideshowHideContent()
-      )
-      // We will add a tilt effect for the title. For this we will create clones of the title that will move
-      // when the user moves the mouse.
-      // Number of total title elements;
-      slide.totalTiltText = 3
-      slide.DOM.innerTitleTmp = document.createElement('span')
-      slide.DOM.innerTitleTmp.className = 'slide__title-inner'
-      slide.DOM.innerTitleTmp.innerHTML = slide.DOM.title.innerHTML
-      slide.DOM.title.innerHTML = ''
-      for (let i = 0; i <= slide.totalTiltText - 1; ++i) {
-        slide.DOM.title.appendChild(slide.DOM.innerTitleTmp.cloneNode(true))
-      }
-      slide.DOM.innerTitle = [
-        ...slide.DOM.title.querySelectorAll('.slide__title-inner')
-      ]
-      // Split the title inner elements into spans using charmingjs.
-      slide.DOM.innerTitle.forEach((inner) => charming(inner))
-      slide.innerTitleTotal = slide.DOM.innerTitle.length
-      // Letters of the main one (the top most inner title).
-      slide.innerTitleMainLetters = [
-        ...slide.DOM.innerTitle[slide.innerTitleTotal - 1].querySelectorAll(
-          'span'
-        )
-      ]
-      // total letters.
-      slide.titleLettersTotal = slide.innerTitleMainLetters.length
-      // Initialize the tilt effect for the title.
-      slide.textTilt = this.setupTilt(slide.DOM.title, {})
-      slide.DOM.text = slide.DOM.el.querySelector('.slide__text')
-      slide.DOM.showContentCtrl = slide.DOM.text.querySelector(
-        '.slide__text-link'
-      )
-      slide.DOM.showContentCtrl.addEventListener(
-        'click',
-        this.slideshowShowContent()
-      )
-      return slide
+      let vm = this
+      return new Promise(function(resolve, reject) {
+        let vm1 = vm
+        let slide = {}
+        slide.DOM = {}
+        slide.DOM.el = el
+        vm.setupFigures(el).then(figures => {
+          let vm2 = vm1
+          slide.figures = figures
+          slide.figuresTotal = figures.length
+          slide.DOM.title = slide.DOM.el.querySelector('.slide__title')
+          slide.DOM.content = slide.DOM.el.querySelector('.slide__content')
+          slide.contentcolor = slide.DOM.el.dataset.contentcolor
+          slide.DOM.backFromContentCtrl = slide.DOM.el.querySelector('.slide__back')
+          // We will add a tilt effect for the title. For this we will create clones of the title that will move
+          // when the user moves the mouse.
+          // Number of total title elements;
+          slide.totalTiltText = 3
+          slide.DOM.innerTitleTmp = document.createElement('span')
+          slide.DOM.innerTitleTmp.className = 'slide__title-inner'
+          slide.DOM.innerTitleTmp.innerHTML = slide.DOM.title.innerHTML
+          slide.DOM.title.innerHTML = ''
+          for (let i = 0; i <= slide.totalTiltText - 1; ++i) {
+            slide.DOM.title.appendChild(slide.DOM.innerTitleTmp.cloneNode(true))
+          }
+          slide.DOM.innerTitle = [
+            ...slide.DOM.title.querySelectorAll('.slide__title-inner')
+          ]
+          // Split the title inner elements into spans using charmingjs.
+          slide.DOM.innerTitle.forEach((inner) => charming(inner))
+          slide.innerTitleTotal = slide.DOM.innerTitle.length
+          // Letters of the main one (the top most inner title).
+          slide.innerTitleMainLetters = [
+            ...slide.DOM.innerTitle[slide.innerTitleTotal - 1].querySelectorAll(
+              'span'
+            )
+          ]
+          // total letters.
+          slide.titleLettersTotal = slide.innerTitleMainLetters.length
+          // Initialize the tilt effect for the title.
+          vm2.setupTilt(slide.DOM.title).then(tilt => {
+            slide.textTilt = tilt
+            slide.DOM.text = slide.DOM.el.querySelector('.slide__text')
+            slide.DOM.showContentCtrl = slide.DOM.text.querySelector(
+              '.slide__text-link'
+            )
+            resolve(slide)
+          })
+        })
+      })
     },
     slideshowNavigate(dir) {
       if (this.isAnimating || this.isContentOpen) {
@@ -364,7 +376,6 @@ export const mixin = {
       this.isAnimating = true
 
       const currentSlide = this.slideshow.slides[this.slideshow.current]
-      console.log(currentSlide)
 
       if (action === 'show') {
         this.isContentOpen = true
@@ -795,36 +806,70 @@ export const mixin = {
           )
         })
     },
-    async setupSlides(els) {
+    setupSlides(els) {
+      let vm = this
+      return new Promise(function(resolve, reject) {
         let slides = []
+        const promises = [];
         for (let i=0; i<els.length; i++) {
-            let slideEl = els[i]
-            let slide = await this.setupSlide(slideEl)
-            slides.push(slide)
+          let slideEl = els[i]
+          promises.push(vm.setupSlide(slideEl).then(slide => slides.push(slide)))
         }
+        Promise.all(promises).then(() => {
+          resolve(slides)
+        })
+      })
     },
-    async setupSlideshow() {
+    setupSlideshow() {
       const slideshowEl = document.querySelector('.slideshow')
       const slideEls = slideshowEl.querySelectorAll('.slide')
-      const slides = await this.setupSlides(slideEls)
       this.slideshow.DOM.el = slideshowEl
-      this.slideshow.slides = slides
-      this.slideshow.slidesTotal = slides.length
-      this.slideSetCurrent()
+      let vm = this
+      vm.setupSlides(slideEls).then(slides => {
+        vm.slideshow.slides = slides
+        vm.slideshow.slidesTotal = slides.length
+      }).then(() => {
+        vm.slideSetCurrent()
+        vm.setupSlideControl()
+      })
+    },
+    setupSlideControl() {
+      for (let i=0; i<this.slideshow.slides.length; i++) {
+        let backFromContentCtrl = this.slideshow.slides[i].DOM.backFromContentCtrl
+        let showContentCtrl = this.slideshow.slides[i].DOM.showContentCtrl
+        backFromContentCtrl.addEventListener(
+          'click',
+          this.slideshowHideContent()
+        )
+        showContentCtrl.addEventListener(
+          'click',
+          this.slideshowShowContent()
+        )
+      }
     },
     slideSetCurrent() {
-        this.slideToggleCurrent(true)
+      this.slideToggleCurrent(true)
     },
     slideUnsetCurrent() {
-        this.slideToggleCurrent(false)
+      this.slideToggleCurrent(false)
     },
     slideToggleCurrent(isCurrent) {
-        let current = this.slideshow.slides[this.slideshow.current]
-        current.DOM.el.classList[isCurrent ? 'add' : 'remove']('slide--current')
-        // Start/Stop the images tilt effect (initialized on the main figure).
-        current.figures.find(figure => figure.isMain).tilt[isCurrent ? 'start' : 'stop']()
-        // Start/Stop the title tilt effect.
-        current.textTilt[isCurrent ? 'start' : 'stop']()
+      let current = this.slideshow.slides[this.slideshow.current]
+      current.DOM.el.classList[isCurrent ? 'add' : 'remove']('slide--current')
+      // Start/Stop the images tilt effect (initialized on the main figure).
+      let imageTilt = current.figures.find(figure => figure.isMain).tilt
+      if (isCurrent) {
+        this.tiltStart(imageTilt)
+      } else {
+        this.tiltStop(imageTilt)
+      }
+      // Start/Stop the title tilt effect.
+      let titleTilt = current.textTilt
+      if (isCurrent) {
+        this.tiltStart(titleTilt)
+      } else {
+        this.tiltStop(titleTilt)
+      }
     },
     setupNavigation() {
       const navEl = document.querySelector('.nav')
