@@ -370,6 +370,7 @@ export const mixin = {
       this.slideshowToggleContent('hide')
     },
     slideshowToggleContent(action) {
+      console.log('hi')
       if (this.isAnimating) {
         return false
       }
@@ -383,7 +384,7 @@ export const mixin = {
         this.dir = 'up'
       }
 
-      this.tl = new TimelineMax({
+      let tl = new TimelineMax({
         onComplete: () => {
           if (action === 'hide') {
             this.isContentOpen = false
@@ -416,9 +417,9 @@ export const mixin = {
           this.dir = 'down'
         }
       }
-      this.tl.addCallback(onSwitchCallback, times.switchtime)
+      tl.add(onSwitchCallback, times.switchtime)
 
-      this.tl.to(
+      tl.to(
         document.body,
         this.slideshow.animationSettings.duration,
         {
@@ -453,7 +454,7 @@ export const mixin = {
               )
 
       currentSlideFigures.forEach((figure, pos) => {
-        this.tl
+        tl
           .to(
             figure.DOM.el,
             this.slideshow.animationSettings.duration,
@@ -501,7 +502,7 @@ export const mixin = {
               0.05 + 0.04 * (currentSlide.titleLettersTotal - 1) + times.texts
             )
 
-      this.tl.to(
+      tl.to(
         currentSlide.DOM.text,
         this.slideshow.animationSettings.duration,
         {
@@ -511,7 +512,7 @@ export const mixin = {
         'begin+=' + times.texts
       )
 
-      this.tl.staggerTo(
+      tl.staggerTo(
         shuffleArray(currentSlide.innerTitleMainLetters),
         0.05,
         {
@@ -523,7 +524,7 @@ export const mixin = {
       )
 
       extraInnerTitleElems.forEach((inner) => {
-        this.tl.to(
+        tl.to(
           inner,
           0.1,
           {
@@ -549,7 +550,7 @@ export const mixin = {
             )
           : times.content
       // Content comes/goes now..
-      this.tl
+      tl
         .to(
           figureMain.DOM.el,
           this.slideshow.animationSettings.duration,
@@ -600,7 +601,7 @@ export const mixin = {
         )
 
       extraInnerTitleElems.forEach((inner) => {
-        this.tl.to(
+        tl.to(
           inner,
           0.1,
           {
@@ -612,7 +613,7 @@ export const mixin = {
       })
     },
     slideshowToggleSlides(currentSlide, upcomingSlide) {
-      this.tl = new TimelineMax({
+      let tl = new TimelineMax({
         onStart: () => {
           currentSlide.DOM.el.style.zIndex = 100
           upcomingSlide.DOM.el.style.zIndex = 101
@@ -620,8 +621,8 @@ export const mixin = {
         onComplete: () => (this.isAnimating = false)
       }).add('begin')
 
-      const onCompleteCurrentCallback = () => currentSlide.unsetCurrent()
-      this.tl.addCallback(
+      const onCompleteCurrentCallback = () => this.slideUnsetCurrent()
+      tl.add(
         onCompleteCurrentCallback,
         this.slideshow.animationSettings.duration +
           this.slideshow.animationSettings.staggerFactor * (this.slidesTotal - 1)
@@ -643,7 +644,7 @@ export const mixin = {
         })
         upcomingSlide.setCurrent()
       }
-      this.tl.addCallback(
+      tl.add(
         onStartUpcomingCallback,
         this.slideshow.animationSettings.staggerFactor * (currentSlide.figuresTotal - 1)
       )
@@ -659,7 +660,7 @@ export const mixin = {
               .reverse()
 
       currentSlideFigures.forEach((figure, pos) => {
-        this.tl
+        tl
           .to(
             figure.DOM.el,
             this.slideshow.animationSettings.duration,
@@ -681,7 +682,7 @@ export const mixin = {
           )
       })
 
-      this.tl.to(
+      tl.to(
         currentSlide.DOM.text,
         this.slideshow.animationSettings.duration,
         {
@@ -692,7 +693,7 @@ export const mixin = {
           this.slideshow.animationSettings.duration * this.slideshow.animationSettings.staggerFactor
       )
 
-      this.tl.staggerTo(
+      tl.staggerTo(
         shuffleArray(currentSlide.innerTitleMainLetters),
         0.05,
         {
@@ -707,7 +708,7 @@ export const mixin = {
       currentSlide.DOM.innerTitle
         .filter((_, pos) => pos < currentSlide.innerTitleTotal - 1)
         .forEach((inner) => {
-          this.tl.to(
+          tl.to(
             inner,
             0.1,
             {
@@ -731,7 +732,7 @@ export const mixin = {
               .reverse()
 
       upcomingSlideFigures.forEach((figure, pos) => {
-        this.tl
+        tl
           .to(
             figure.DOM.el,
             this.slideshow.animationSettings.duration,
@@ -763,7 +764,7 @@ export const mixin = {
           )
       })
 
-      this.tl.to(
+      tl.to(
         upcomingSlide.DOM.text,
         this.slideshow.animationSettings.duration,
         {
@@ -774,7 +775,7 @@ export const mixin = {
           this.slideshow.animationSettings.staggerFactor * (currentSlide.figuresTotal - 1)
       )
 
-      this.tl.staggerTo(
+      tl.staggerTo(
         shuffleArray(upcomingSlide.innerTitleMainLetters),
         0.05,
         {
@@ -789,7 +790,7 @@ export const mixin = {
       upcomingSlide.DOM.innerTitle
         .filter((_, pos) => pos < upcomingSlide.innerTitleTotal - 1)
         .forEach((inner) => {
-          this.tl.to(
+          tl.to(
             inner,
             0.5,
             {
@@ -903,7 +904,7 @@ export const mixin = {
     navShowNavigationCtrls() {
       this.toggleNavigationCtrls('show')
     },
-    navToggleNavigationCtrls(action) {
+    toggleNavigationCtrls(action) {
       this.nav.DOM.navPrevCtrl.style.opacity = action === 'show' ? 1 : 0
       this.nav.DOM.navNextCtrl.style.opacity = action === 'show' ? 1 : 0
     },
