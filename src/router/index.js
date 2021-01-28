@@ -69,6 +69,26 @@ export const constantRoutes = [
     path: '/animate-number',
     component: () => import('@/views/animate-number'),
     name: 'Animate Number'
+  },
+  {
+    path: '/animate-color',
+    component: () => import('@/views/animate-color'),
+    name: 'Animate Color'
+  },
+  {
+    path: '/animate-radius',
+    component: () => import('@/views/animate-radius'),
+    name: 'Animate Radius'
+  },
+  {
+    path: '/animate-calculus',
+    component: () => import('@/views/animate-calculus'),
+    name: 'Animate Calculus'
+  },
+  {
+    path: '/wall-e',
+    component: () => import('@/views/wall-e'),
+    name: 'Wall-e'
   }
 ]
 

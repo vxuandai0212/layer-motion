@@ -1,6 +1,6 @@
 import imagesLoaded from 'imagesloaded'
-import TweenMax from "@tweenjs/tween.js"
 import Quint from 'gsap/EasePack'
+import gsap from "gsap"
 import { TimelineMax } from 'gsap/all'
 
 import { 
@@ -370,6 +370,7 @@ export const mixin = {
       this.slideshowToggleContent('hide')
     },
     slideshowToggleContent(action) {
+      let vm = this
       console.log('hi')
       if (this.isAnimating) {
         return false
@@ -613,6 +614,7 @@ export const mixin = {
       })
     },
     slideshowToggleSlides(currentSlide, upcomingSlide) {
+      let vm = this
       let tl = new TimelineMax({
         onStart: () => {
           currentSlide.DOM.el.style.zIndex = 100
@@ -630,19 +632,20 @@ export const mixin = {
 
       const onStartUpcomingCallback = () => {
         upcomingSlide.figures.forEach((figure) => {
-          TweenMax.set(figure.DOM.slideEl, {
-            x: this.dir === 'right' ? '-101%' : '101%'
+          gsap.to(figure.DOM.slideEl, {
+            x: vm.dir === 'right' ? '-101%' : '101%'
           })
         })
-        TweenMax.set(upcomingSlide.DOM.text, { opacity: 0 })
+        gsap.to(upcomingSlide.DOM.text, { opacity: 0 })
         upcomingSlide.DOM.innerTitle.forEach((inner, pos) => {
           if (pos === upcomingSlide.innerTitleTotal - 1) {
-            TweenMax.set([...inner.querySelectorAll('span')], { opacity: 0 })
+            gsap.to([...inner.querySelectorAll('span')], { opacity: 0 })
           } else {
-            TweenMax.set(inner, { opacity: 0 })
+            gsap.to(inner, { opacity: 0 })
           }
         })
-        upcomingSlide.setCurrent()
+        // upcomingSlide.setCurrent()
+        vm.slideSetCurrent()
       }
       tl.add(
         onStartUpcomingCallback,

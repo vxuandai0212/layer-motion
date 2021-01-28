@@ -408,5 +408,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '@/scss/layer-motion-slideshow/index.scss';
+// @import '@/scss/layer-motion-slideshow/index.scss';
 </style>
