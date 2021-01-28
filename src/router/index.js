@@ -64,6 +64,11 @@ export const constantRoutes = [
     path: '/typography-motion',
     component: () => import('@/components/typography-motion'),
     name: 'Typography Motion'
+  },
+  {
+    path: '/animate-number',
+    component: () => import('@/views/animate-number'),
+    name: 'Animate Number'
   }
 ]
 
