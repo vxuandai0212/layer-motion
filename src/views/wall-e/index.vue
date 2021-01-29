@@ -44,7 +44,7 @@
         />
       </g>
       <g id="Layer_2" data-name="Layer 2">
-        <g class="head" v-bind:class="{ isFlipped: flip }">
+        <g class="head" :class="{ isFlipped: flip }">
           <g id="neck">
             <g id="neckb">
               <path
@@ -464,7 +464,6 @@ export default {
   name: 'WallE',
   data() {
     return {
-      startX: 0,
       x: 0,
       y: 0,
       flip: false,
@@ -472,23 +471,17 @@ export default {
       startArms: 0
     }
   },
-  computed: {
-    result() {
-      return this.firstNumber + this.secondNumber
-    }
-  },
   watch: {},
   mounted() {
-    let tl = gsap.timeline({
+    const tl = gsap.timeline({
       repeat: -1,
       repeatDelay: 2
     })
-
     tl.add('redo')
     tl.to(
       '#lefteye',
-      0.5,
       {
+        duration: 0.5,
         rotation: 5,
         repeat: 3,
         yoyo: true,
@@ -499,8 +492,8 @@ export default {
     )
     tl.to(
       '#righteye',
-      0.5,
       {
+        duration: 0.5,
         rotation: -5,
         repeat: 3,
         yoyo: true,
@@ -511,11 +504,11 @@ export default {
     )
     tl.fromTo(
       '#lefteyeball',
-      0.05,
       {
         scaleY: 1
       },
       {
+        duration: 0.05,
         scaleY: 0,
         repeat: 3,
         yoyo: true,
@@ -526,11 +519,11 @@ export default {
     )
     tl.fromTo(
       '#righteyeball',
-      0.05,
       {
         scaleY: 1
       },
       {
+        duration: 0.05,
         scaleY: 0,
         repeat: 3,
         yoyo: true,
@@ -541,8 +534,8 @@ export default {
     )
     tl.to(
       '#eyecontain',
-      0.4,
       {
+        duration: 0.4,
         rotation: -15,
         repeat: 1,
         yoyo: true,
@@ -551,7 +544,8 @@ export default {
       },
       'redo+=2'
     )
-    gsap.to('p', 0.5, {
+    gsap.to('p', {
+      duration: 0.5,
       opacity: 0,
       delay: 2,
       ease: Sine.easeIn
@@ -559,12 +553,12 @@ export default {
   },
   methods: {
     armsTL() {
-      let tl = gsap.timeline()
+      const tl = gsap.timeline()
       tl.add('startarms')
       tl.to(
         '#backhand',
-        2,
         {
+          duration: 2,
           x: -16,
           rotation: 150,
           transformOrigin: '50% 50%'
@@ -573,8 +567,8 @@ export default {
       )
       tl.to(
         '#rightarm',
-        2,
         {
+          duration: 2,
           rotation: 30,
           transformOrigin: '100% 0'
         },
@@ -582,8 +576,8 @@ export default {
       )
       tl.to(
         '#newrightarm',
-        2,
         {
+          duration: 2,
           x: -94,
           y: -918,
           rotation: 10,
@@ -594,8 +588,8 @@ export default {
 
       tl.to(
         '#hand',
-        2,
         {
+          duration: 2,
           x: -15,
           y: -7,
           rotation: 90,
@@ -605,8 +599,8 @@ export default {
       )
       tl.to(
         '#leftarm',
-        2,
         {
+          duration: 2,
           rotation: 20,
           transformOrigin: '100% 0'
         },
@@ -614,8 +608,8 @@ export default {
       )
       tl.to(
         '#newleftarm',
-        2,
         {
+          duration: 2,
           x: -100,
           y: -924,
           transformOrigin: '100% 100%'
@@ -626,13 +620,11 @@ export default {
       return tl
     },
     coordinates(e) {
-      const audio = new Audio(
-          'https://s3-us-west-2.amazonaws.com/s.cdpn.io/28963/Whoa.mp3'
-        ),
-        walleBox = document.getElementById('walle').getBoundingClientRect(),
-        walleCoords = walleBox.width / 2 + walleBox.left
+      const audio = new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/28963/Whoa.mp3')
+      const walleBox = document.getElementById('walle').getBoundingClientRect()
+      const walleCoords = walleBox.width / 2 + walleBox.left
 
-      if (this.startArms == 0) {
+      if (this.startArms === 0) {
         this.startArms = this.armsTL()
       }
 

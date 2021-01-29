@@ -1,15 +1,15 @@
 <template>
   <div>
     <svg width="200" height="200">
-      <polygon :points="points"></polygon>
-      <circle cx="100" cy="100" r="90"></circle>
+      <polygon :points="points" />
+      <circle cx="100" cy="100" r="90" />
     </svg>
     <label>Sides: {{ sides }}</label>
-    <input type="range" min="3" max="500" v-model.number="sides" />
+    <input v-model.number="sides" type="range" min="3" max="500">
     <label>Minimum Radius: {{ minRadius }}%</label>
-    <input type="range" min="0" max="90" v-model.number="minRadius" />
+    <input v-model.number="minRadius" type="range" min="0" max="90">
     <label>Update Interval: {{ updateInterval }} milliseconds</label>
-    <input type="range" min="10" max="2000" v-model.number="updateInterval" />
+    <input v-model.number="updateInterval" type="range" min="10" max="2000">
   </div>
 </template>
 <script>
@@ -27,7 +27,7 @@ export default {
       sides: defaultSides,
       minRadius: 50,
       interval: null,
-      updateInterval: 500
+      updateInterval: 500,
     }
   },
   computed: {
@@ -51,7 +51,7 @@ export default {
     },
     stats: function(newStats) {
       gsap.to(this.$data, this.updateInterval / 1000, {
-        points: generatePoints(newStats)
+        points: generatePoints(newStats),
       })
     },
     updateInterval: function() {
@@ -78,7 +78,7 @@ export default {
       this.interval = setInterval(function() {
         vm.randomizeStats()
       }, this.updateInterval)
-    }
+    },
   }
 }
 
