@@ -89,6 +89,66 @@ export const constantRoutes = [
     path: '/wall-e',
     component: () => import('@/views/wall-e'),
     name: 'Wall-e'
+  },
+  {
+    path: '/ticker',
+    component: () => import('@/views/ticker'),
+    name: 'Ticker'
+  },
+  {
+    path: '/font-caterpillar',
+    component: () => import('@/views/font-caterpillar'),
+    name: 'Font Caterpillar'
+  },
+  {
+    path: '/text-along-path',
+    component: () => import('@/views/text-along-path'),
+    name: 'Text Along Path'
+  },
+  {
+    path: '/star-war',
+    component: () => import('@/views/star-war'),
+    name: 'Star War'
+  },
+  {
+    path: '/title-sequence',
+    component: () => import('@/views/title-sequence'),
+    name: 'Title Sequence'
+  },
+  {
+    path: '/intro-text',
+    component: () => import('@/views/intro-text'),
+    name: 'Intro Text'
+  },
+  {
+    path: '/image-slide',
+    component: () => import('@/views/image-slide'),
+    name: 'Image Slide'
+  },
+  {
+    path: '/text-animation',
+    component: () => import('@/views/text-animation'),
+    name: 'Text Animation'
+  },
+  {
+    path: '/text-animation-v2',
+    component: () => import('@/views/text-animation/v2'),
+    name: 'Text Animation V2'
+  },
+  {
+    path: '/navigator-v1',
+    component: () => import('@/views/navigator'),
+    name: 'Navigator V1'
+  },
+  {
+    path: '/work-fun',
+    component: () => import('@/views/work-fun'),
+    name: 'Work Fun'
+  },
+  {
+    path: '/park-svg',
+    component: () => import('@/views/free-frontend/park'),
+    name: 'Park SVG'
   }
 ]
 
