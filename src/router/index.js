@@ -89,6 +89,21 @@ export const constantRoutes = [
     path: '/wall-e',
     component: () => import('@/views/wall-e'),
     name: 'Wall-e'
+  },
+  {
+    path: '/menu/1',
+    component: () => import('@/views/circle-menu/menu-1'),
+    name: 'Menu 1'
+  },
+  {
+    path: '/editor',
+    component: () => import('@/views/editor/tinymce'),
+    name: 'Tinymce Editor'
+  },
+  {
+    path: '/editor/sms',
+    component: () => import('@/views/editor/sms'),
+    name: 'Tinymce Editor SMS'
   }
 ]
 
