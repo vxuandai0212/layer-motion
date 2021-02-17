@@ -149,6 +149,8 @@ export const constantRoutes = [
     path: '/park-svg',
     component: () => import('@/views/free-frontend/park'),
     name: 'Park SVG'
+  },
+  {
     path: '/menu/1',
     component: () => import('@/views/circle-menu/menu-1'),
     name: 'Menu 1'
@@ -162,6 +164,26 @@ export const constantRoutes = [
     path: '/editor/sms',
     component: () => import('@/views/editor/sms'),
     name: 'Tinymce Editor SMS'
+  },
+  {
+    path: '/editor/email',
+    component: () => import('@/views/editor/email'),
+    name: 'Tinymce Editor Email'
+  },
+  {
+    path: '/svg/housing',
+    component: () => import('@/views/animate-svg/housing'),
+    name: 'Housing Animation'
+  },
+  {
+    path: '/svg/work-fun',
+    component: () => import('@/views/animate-svg/work-with-fun'),
+    name: 'Work With Fun'
+  },
+  {
+    path: '/svg/rocket',
+    component: () => import('@/views/free-frontend/rocket'),
+    name: 'Rocket'
   }
 ]
 

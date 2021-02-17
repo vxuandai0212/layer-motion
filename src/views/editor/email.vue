@@ -8,11 +8,11 @@
   </div>
 </template>
 <script>
-import MinimalTinymceEditor from './components/minimal'
+import FullFeatureTinymceEditor from './components/full'
 export default {
-  name: 'SmsTinymceEditor',
+  name: 'EmailTinymceEditor',
   components: {
-    'editor': MinimalTinymceEditor,
+    'editor': FullFeatureTinymceEditor,
   },
   data() {
     return {
